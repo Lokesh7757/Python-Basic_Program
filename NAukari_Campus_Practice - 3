@@ -1,0 +1,55 @@
+Problem Statement
+
+You are given an array of 'n' size consisting of characters (0-9). Return the sum of GCD of all the pairs of non-zero frequencies which can be formed from the frequency array of all the characters.
+
+Frequency can be defined as the frequency of each element which is present in the character array. If the array contains only one distinct element then return it's frequency as answer.
+
+import math
+from collections import Counter
+
+def sum_of_gcds(n, arr):
+    # Count the frequency of each digit (0-9)
+    freq = Counter(arr)
+
+    # Get only non-zero frequencies
+    freq_values = [freq[char] for char in freq if freq[char] > 0]
+
+    # If there's only one unique non-zero frequency, return it directly
+    if len(freq_values) == 1:
+        return freq_values[0]
+
+    # Calculate the sum of GCDs for all pairs
+    sum_gcd = 0
+
+    # Optimize the calculation by avoiding duplicate pairs
+    for i in range(len(freq_values)):
+        for j in range(i + 1, len(freq_values)):
+            sum_gcd += math.gcd(freq_values[i], freq_values[j])
+
+    return sum_gcd
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().strip().split()
+    
+    if len(data) == 0:
+        print("No input provided")
+        return
+    
+    try:
+        n = int(data[0])
+        arr = data[1:]
+        
+        if len(arr) != n:
+            print("Input size does not match the number of provided elements")
+            return
+        
+        result = sum_of_gcds(n, arr)
+        print(result)
+        
+    except ValueError as e:
+        print("Error in input: {}".format(e))
+
+if __name__ == "__main__":
+    main()
