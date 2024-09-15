@@ -1,0 +1,45 @@
+Problem Statement
+
+There are n cities and m one-directional roads connecting city A[i] to city B[i]. We are in the panner-making business. Each city has its own price of paneer. You can buy or sell paneer in the city i for vali rupees. You have to buy paneer from some city u and sell the paneer in another city v. The profit you make is calculated as the selling price minus buying price. Return an integer denoting the maximum profit you can make. NOTE: In all, it is mandatory to buy only 1 paneer, and it is mandatory to sell that paneer in some other city that can be traveled from it.
+
+from collections import defaultdict, deque
+
+def max_paneer_profit(n, val, m, A, B):
+    # Step 1: Build the graph
+    graph = defaultdict(list)
+    for i in range(m):
+        graph[A[i] - 1].append(B[i] - 1)  # Add edge from A to B (0-indexed)
+
+    # Step 2: Initialize the minimum value for each city as its own value
+    min_val = val[:]
+    
+    # Step 3: Perform BFS from each city to update the minimum buy price for reachable cities
+    for city in range(n):
+        queue = deque([city])
+        visited = [False] * n
+        visited[city] = True
+        
+        while queue:
+            u = queue.popleft()
+            for v in graph[u]:
+                if not visited[v]:
+                    min_val[v] = min(min_val[v], min_val[city])
+                    visited[v] = True
+                    queue.append(v)
+
+    # Step 4: Compute the maximum profit by comparing each city's selling price to the min buy price
+    max_profit = float('-inf')
+    for city in range(n):
+        max_profit = max(max_profit, val[city] - min_val[city])
+
+    return max_profit
+
+# Input parsing
+n = int(input().strip())  # number of cities
+val = [int(input().strip()) for _ in range(n)]  # paneer prices in cities
+m = int(input().strip())  # number of roads
+A = [int(input().strip()) for _ in range(m)]  # start cities of roads
+B = [int(input().strip()) for _ in range(m)]  # end cities of roads
+
+# Output the maximum profit
+print(max_paneer_profit(n, val, m, A, B))
