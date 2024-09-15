@@ -1,0 +1,20 @@
+Problem Statement
+
+You have an array, of size N, which initially has all values equal to 0. In one operation, you can pick any subarray of this array, and increase all the values within the subarray by 1. You are also given a target array of size N. Determine the minimum number of operations, you will need, in order to transform your array into the target array. It can be proved, that the answer always exists.
+
+# Input the number of elements
+N = int(input().strip())
+
+# Input the target array
+target = [int(input().strip()) for _ in range(N)]
+
+# Initialize the number of operations
+operations = target[0]  # Start with the first element's value
+
+# Iterate over the array and count the operations needed
+for i in range(1, N):
+    if target[i] > target[i - 1]:
+        operations += target[i] - target[i - 1]
+
+# Output the result
+print(operations)
